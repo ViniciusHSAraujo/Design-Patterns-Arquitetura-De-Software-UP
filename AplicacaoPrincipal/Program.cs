@@ -1,6 +1,8 @@
 ﻿using System;
 using static System.Console;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Singleton;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Strategy;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Strategy.Estrategias;
 
 namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincipal {
     class Program {
@@ -15,6 +17,7 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 Title = "Menu da aplicação";
                 WriteLine("Escolha uma das opções abaixo para executar o Design Pattern correspondente:");
                 WriteLine("1 - Singleton (Buscar próximo número de ticket)");
+                WriteLine("2 - Strategy (Formatar data)");
                 WriteLine("0 - Sair");
 
                 int opcao = RecuperaInteiro("");
@@ -22,6 +25,10 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 switch (opcao) {
                     case 1:
                         BuscarPróximoNumeroDeTicket();
+                        ExibirMensagemDeRetornoAoMenu();
+                        break;
+                    case 2:
+                        FormatarData();
                         ExibirMensagemDeRetornoAoMenu();
                         break;
                     case 0:
@@ -35,12 +42,41 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
             } while (continuar);
         }
 
+        private static void FormatarData() {
+            var formatacaoDeData = new FormatacaoDeData();
+
+            var data = RecuperaStringNaoVazia("Qual é a data que você deseja formatar ? Utilize o padrão \"dd/mm/aaaa\"");
+            formatacaoDeData.SelecionarData(data);
+
+            WriteLine("Escolha uma das opções abaixo para executar a formatação da data:");
+            WriteLine("1 - Internacional");
+            WriteLine("2 - Brasileiro");
+            WriteLine("3 - Europeu");
+            var opcaoEscolhida = RecuperaInteiro("Digite o número correspondente ao padrão de data que você deseja aplicar:");
+
+            switch (opcaoEscolhida) {
+                case 1:
+                    formatacaoDeData.EscolherEstrategiaDeFormatacao(new FormatacaoDeDataInternacional());
+                    formatacaoDeData.FormatarData();
+                    break;
+                case 2:
+                    formatacaoDeData.EscolherEstrategiaDeFormatacao(new FormatacaoDeDataBrasileiro());
+                    formatacaoDeData.FormatarData();
+                    break;
+                case 3:
+                    formatacaoDeData.EscolherEstrategiaDeFormatacao(new FormatacaoDeDataEuropeu());
+                    formatacaoDeData.FormatarData();
+                    break;
+            }
+
+        }
+
         #region Singleton
         private static void BuscarPróximoNumeroDeTicket() {
             var ticket = TicketNumber.GetInstance().GetNextTicket();
-            WriteLine($"Número do ticket: {ticket}"); 
+            WriteLine($"Número do ticket: {ticket}");
         }
-            
+
         #endregion
 
         #region Métodos de funcionamento do menu
