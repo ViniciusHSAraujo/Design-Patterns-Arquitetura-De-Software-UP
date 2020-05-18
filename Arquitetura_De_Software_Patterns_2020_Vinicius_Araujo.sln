@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AplicacaoPrincipal", "AplicacaoPrincipal\AplicacaoPrincipal.csproj", "{01F688D0-ED01-4993-BE4E-E9C8844B3BDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AplicacaoPrincipal", "AplicacaoPrincipal\AplicacaoPrincipal.csproj", "{01F688D0-ED01-4993-BE4E-E9C8844B3BDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singleton", "Singleton\Singleton.csproj", "{4502AC08-D0C3-4307-94F6-028D061B5778}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Singleton", "Singleton\Singleton.csproj", "{4502AC08-D0C3-4307-94F6-028D061B5778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strategy", "Strategy\Strategy.csproj", "{FCD2C27E-C8CC-47B0-A720-4758D2EDB3B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strategy", "Strategy\Strategy.csproj", "{FCD2C27E-C8CC-47B0-A720-4758D2EDB3B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template", "Template\Template.csproj", "{DA502B6C-1574-4BF0-BAA9-56CD82DEA114}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{FCD2C27E-C8CC-47B0-A720-4758D2EDB3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCD2C27E-C8CC-47B0-A720-4758D2EDB3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCD2C27E-C8CC-47B0-A720-4758D2EDB3B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA502B6C-1574-4BF0-BAA9-56CD82DEA114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA502B6C-1574-4BF0-BAA9-56CD82DEA114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA502B6C-1574-4BF0-BAA9-56CD82DEA114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA502B6C-1574-4BF0-BAA9-56CD82DEA114}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
