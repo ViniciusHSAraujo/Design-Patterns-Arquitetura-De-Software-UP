@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Factory_Nome_Sobrenome\Factory_Nome_Sobrenome.csproj" />
     <ProjectReference Include="..\Singleton\Singleton.csproj" />
     <ProjectReference Include="..\Strategy\Strategy.csproj" />
     <ProjectReference Include="..\Template\Template.csproj" />

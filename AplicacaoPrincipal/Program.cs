@@ -5,9 +5,15 @@ using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Strategy;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Strategy.Estrategias;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Template.Implementacoes;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Template.Templates;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome_Sobrenome.Entities;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome_Sobrenome.Entities.Enums;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome_Sobrenome.Entities.Interfaces;
+using System.Collections.Generic;
 
 namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincipal {
     class Program {
+
+        private static List<INomeCompleto> _nomes = new List<INomeCompleto>();
 
         #region Menu
         static void Main(string[] args) {
@@ -23,6 +29,8 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 WriteLine("1 - Singleton (Buscar próximo número de ticket)");
                 WriteLine("2 - Strategy (Formatar data)");
                 WriteLine("3 - Template (Formatar textos)");
+                WriteLine("4 - Factory 01 - Formatacao de Nomes");
+                WriteLine("5 - Factory 01 - Listagem de Nomes");
                 WriteLine("0 - Sair");
 
                 int opcao = RecuperaInteiro("");
@@ -41,6 +49,16 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                     case 3:
                         Clear();
                         FormatarTextos();
+                        ExibirMensagemDeRetornoAoMenu();
+                        break;
+                    case 4:
+                        Clear();
+                        EscreverNomes();
+                        ExibirMensagemDeRetornoAoMenu();
+                        break;
+                    case 5:
+                        Clear();
+                        ListarNomes();
                         ExibirMensagemDeRetornoAoMenu();
                         break;
                     case 0:
@@ -110,6 +128,44 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
             TransformadorDeTexto.ConverterTexto(new TransformacaoDeTextoParaInvertido(texto));
 
         }
+        #endregion
+
+        #region Factory
+
+        #region Factory - Nome Sobrenome
+
+        private static void EscreverNomes()
+        {
+            WriteLine("Formatos de nomes aceitos:");
+            WriteLine("Nome Sobrenome");
+            WriteLine("Sobrenome, Nome");
+            var nomeEscolhido = RecuperaStringNaoVazia("Digite o nome que você deseja guardar, de acordo com os formatos aceitos pela aplicação:");
+            
+            INomeCompleto nome;
+
+            if (nomeEscolhido.Contains(","))
+            {
+                nome = new Nome().ExecutarCriacao(Formatos.SobrenomeNome, nomeEscolhido);
+            }
+            else
+            {
+                nome = new Nome().ExecutarCriacao(Formatos.NomeSobrenome, nomeEscolhido);
+            }
+
+            _nomes.Add(nome);
+
+        }
+
+        private static void ListarNomes()
+        {
+            foreach (var nome in _nomes)
+            {
+                nome.Escrever();
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Métodos de funcionamento do menu
