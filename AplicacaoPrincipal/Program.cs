@@ -9,20 +9,31 @@ using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome_Sobrenome.Entities.Enums;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome_Sobrenome.Entities.Interfaces;
 using System.Collections.Generic;
+using System.IO;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities.Interfaces;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities;
+using Factory_Provedor_De_Informacoes.Entities;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities.Enums;
 
-namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincipal {
-    class Program {
+namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincipal
+{
+    class Program
+    {
 
         private static List<INomeCompleto> _nomes = new List<INomeCompleto>();
+        private static string _filePath = Path.Combine(Path.GetPathRoot("C:/"), @"ArquiteturaDeSoftware\UP\2020\SegundoBimestre\1827575\");
 
         #region Menu
-        static void Main(string[] args) {
+        static void Main(string[] args)
+        {
             ExecutarMenu();
         }
-       
-        private static void ExecutarMenu() {
+
+        private static void ExecutarMenu()
+        {
             bool continuar = true;
-            do {
+            do
+            {
                 Clear();
                 Title = "Menu da aplicação";
                 WriteLine("Escolha uma das opções abaixo para executar o Design Pattern correspondente:");
@@ -31,11 +42,13 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 WriteLine("3 - Template (Formatar textos)");
                 WriteLine("4 - Factory 01 - Formatacao de Nomes");
                 WriteLine("5 - Factory 01 - Listagem de Nomes");
+                WriteLine("6 - Factory 02 - Leitura de Arquivos");
                 WriteLine("0 - Sair");
 
                 int opcao = RecuperaInteiro("");
 
-                switch (opcao) {
+                switch (opcao)
+                {
                     case 1:
                         Clear();
                         BuscarPróximoNumeroDeTicket();
@@ -61,6 +74,11 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                         ListarNomes();
                         ExibirMensagemDeRetornoAoMenu();
                         break;
+                    case 6:
+                        Clear();
+                        ProverInformacoes();
+                        ExibirMensagemDeRetornoAoMenu();
+                        break;
                     case 0:
                         continuar = false;
                         break;
@@ -75,7 +93,8 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
         #endregion
 
         #region Singleton
-        private static void BuscarPróximoNumeroDeTicket() {
+        private static void BuscarPróximoNumeroDeTicket()
+        {
             var ticket = TicketNumber.GetInstance().GetNextTicket();
             WriteLine($"Número do ticket: {ticket}");
         }
@@ -84,7 +103,8 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
 
         #region Strategy
 
-        private static void FormatarData() {
+        private static void FormatarData()
+        {
             var formatacaoDeData = new FormatacaoDeData();
 
             var data = RecuperaStringNaoVazia("Qual é a data que você deseja formatar ? Utilize o padrão \"dd/mm/aaaa\"");
@@ -96,7 +116,8 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
             WriteLine("3 - Europeu");
             var opcaoEscolhida = RecuperaInteiro("Digite o número correspondente ao padrão de data que você deseja aplicar:");
 
-            switch (opcaoEscolhida) {
+            switch (opcaoEscolhida)
+            {
                 case 1:
                     formatacaoDeData.EscolherEstrategiaDeFormatacao(new FormatacaoDeDataInternacional());
                     formatacaoDeData.FormatarData();
@@ -115,7 +136,8 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
         #endregion
 
         #region Template
-        private static void FormatarTextos() {
+        private static void FormatarTextos()
+        {
             var texto = RecuperaStringNaoVazia("Qual é o texto que você deseja formatar ?");
             Console.WriteLine("\n -----------------");
             Console.WriteLine("\nConvertendo para minúsculo:\n");
@@ -140,7 +162,7 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
             WriteLine("Nome Sobrenome");
             WriteLine("Sobrenome, Nome");
             var nomeEscolhido = RecuperaStringNaoVazia("Digite o nome que você deseja guardar, de acordo com os formatos aceitos pela aplicação:");
-            
+
             INomeCompleto nome;
 
             if (nomeEscolhido.Contains(","))
@@ -166,11 +188,148 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
 
         #endregion
 
+        #region Factory - Provedor de Informações
+
+        private static void ProverInformacoes()
+        {
+            if (VerificarArquivos())
+            {
+
+                IProvedorDeInformacoes provedor;
+
+                var senha = RecuperaStringNaoVazia("Digite sua senha de acesso: (Para as informações públicas, digite qualquer coisa)");
+
+                if (senha.Equals("designpatterns"))
+                {
+                    provedor = new ProvedorDeInformacoes().CriarProvedor(Provedores.Confidencial);
+                }
+                else
+                {
+                    provedor = new ProvedorDeInformacoes().CriarProvedor(Provedores.Publico);
+                }
+
+                provedor.LerArquivo();
+            }
+        }
+
+        #region Verificação e gravação dos arquivos necessários
+        
+        private static bool VerificarArquivos()
+        {
+            try
+            {
+                VerificarEGravarPastaNoDiscoLocalC(_filePath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+        
+        private static void VerificarEGravarPastaNoDiscoLocalC(string FilePath)
+        {
+            if (!Directory.Exists(FilePath))
+            {
+                Console.WriteLine("Ops.. Não encontrei a pasta com os arquivos necessários para a execução da aplicação em sua máquina. Começando a gravação dos mesmos.");
+                try
+                {
+                    Directory.CreateDirectory(FilePath);
+
+                    Console.WriteLine("Pasta criada com sucesso em seu disco local.");
+
+                    using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePath, "confidencial.txt")))
+                    {
+                        outputFile.WriteLine("Estas são informações confidenciais,o que significa que você provavelmente sabe a palavra secreta!");
+                    }
+
+                    Console.WriteLine("Primeiro arquivo criado com sucesso em sua máquina.");
+
+                    using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePath, "publico.txt")))
+                    {
+                        outputFile.WriteLine("Estas são informações públicas sobre qualquer coisa. Todo mundo pode ver este arquivo.");
+                    }
+                    Console.WriteLine("Segundo arquivo criado com sucesso em sua máquina.");
+
+                    Console.WriteLine("Agora sim! Tudo pronto para a execução da aplicação.");
+
+                    Console.WriteLine("Pressione qualquer tecla para contiuar..");
+
+                    ReadKey();
+                    Clear();
+
+                }
+                catch (Exception)
+                {
+                    throw new Exception($"Não foi possível gravar os arquivos TXT em sua máquina!! Infelizmente a aplicação não funcionará! \nTente criar os arquivos no diretório: \"{FilePath}\" e executar a aplicação novamente.");
+                }
+            }
+            else
+            {
+                VerificarEGravarConfidencialTXT(FilePath);
+                VerificarEGravarPublicoTXT(FilePath);
+            }
+        }
+
+        private static void VerificarEGravarConfidencialTXT(string FilePath)
+        {
+            if (!File.Exists(Path.Combine(FilePath, "confidencial.txt")))
+            {
+                Console.WriteLine("Ops.. Não encontrei um dos arquivos necessários para a execução da aplicação em sua máquina! Começando a gravação do mesmo.");
+                try
+                {
+                    using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePath, "confidencial.txt")))
+                    {
+                        outputFile.WriteLine("Estas são informações confidenciais,o que significa que você provavelmente sabe a palavra secreta!");
+                    }
+                    Console.WriteLine("Arquivo criado com sucesso em sua máquina.");
+                    Console.WriteLine("Pressione qualquer tecla para contiuar..");
+
+                    ReadKey();
+                    Clear();
+                }
+                catch (Exception)
+                {
+                    throw new Exception($"Não foi possível gravar o arquivo \"confidencia.txt\" \nTente criar o arquivo manualmente no diretório: \"{FilePath}\" e executar a aplicação novamente.");
+                }
+            }
+        }
+
+        private static void VerificarEGravarPublicoTXT(string FilePath)
+        {
+            if (!File.Exists(Path.Combine(FilePath, "publico.txt")))
+            {
+                Console.WriteLine("Ops.. Não encontrei um dos arquivos necessários para a execução da aplicação em sua máquina! Começando a gravação do mesmo.");
+                try
+                {
+                    using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePath, "publico.txt")))
+                    {
+                        outputFile.WriteLine("Estas são informações públicas sobre qualquer coisa. Todo mundo pode ver este arquivo.");
+                    }
+                    Console.WriteLine("Arquivo criado com sucesso em sua máquina.");
+                    Console.WriteLine("Pressione qualquer tecla para contiuar..");
+
+                    ReadKey();
+                    Clear();
+                }
+                catch (Exception)
+                {
+                    throw new Exception($"Não foi possível gravar o arquivo \"publico.txt\" \nTente criar o arquivo manualmente no diretório: \"{FilePath}\" e executar a aplicação novamente.");
+                }
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #endregion
 
         #region Métodos de funcionamento do menu
 
-        private static void ExibirMensagemDeRetornoAoMenu() {
+        private static void ExibirMensagemDeRetornoAoMenu()
+        {
             WriteLine("\n\nPressione qualquer tecla para voltar ao menu..");
             ReadKey();
         }
@@ -180,13 +339,17 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
          * Recebe via parâmetro a descrição que ele vai apresentar ao usuário na solicitação do valor.
          * Retorna um valor em double que o usuário informou.
          */
-        private static double RecuperaDecimal(string descricao) {
+        private static double RecuperaDecimal(string descricao)
+        {
             double valor;
 
-            try {
+            try
+            {
                 WriteLine(descricao);
                 valor = Convert.ToDouble(ReadLine());
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 WriteLine("Valor inválido!");
                 valor = RecuperaDecimal(descricao);
             }
@@ -198,13 +361,17 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
          * Recebe via parâmetro a descrição que ele vai apresentar ao usuário na solicitação do valor.
          * Retorna um valor em int que o usuário informou.
          */
-        private static int RecuperaInteiro(string descricao) {
+        private static int RecuperaInteiro(string descricao)
+        {
             int valor;
 
-            try {
+            try
+            {
                 WriteLine(descricao);
                 valor = Convert.ToInt32(ReadLine());
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 WriteLine("Valor inválido!");
                 valor = RecuperaInteiro(descricao);
             }
@@ -216,12 +383,14 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
          * Recebe via parâmetro a descrição que ele vai apresentar ao usuário na solicitação do valor.
          * Retorna um valor em int que o usuário informou.
          */
-        private static string RecuperaStringNaoVazia(string descricao) {
+        private static string RecuperaStringNaoVazia(string descricao)
+        {
             string informacao;
 
             WriteLine(descricao);
             informacao = ReadLine();
-            if (string.IsNullOrWhiteSpace(informacao)) {
+            if (string.IsNullOrWhiteSpace(informacao))
+            {
                 WriteLine("Valor inválido!");
                 informacao = RecuperaStringNaoVazia(descricao);
             }
