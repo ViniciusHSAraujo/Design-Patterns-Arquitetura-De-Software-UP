@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Singleton {
     public class TicketNumber {
 

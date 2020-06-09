@@ -11,9 +11,10 @@ using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Nome
 using System.Collections.Generic;
 using System.IO;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities.Interfaces;
-using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities;
 using Factory_Provedor_De_Informacoes.Entities;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities.Enums;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Facade.Entities;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Facade;
 
 namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincipal
 {
@@ -43,6 +44,7 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 WriteLine("4 - Factory 01 - Formatacao de Nomes");
                 WriteLine("5 - Factory 01 - Listagem de Nomes");
                 WriteLine("6 - Factory 02 - Leitura de Arquivos");
+                WriteLine("7 - Facade - Compra de Passagem");
                 WriteLine("0 - Sair");
 
                 int opcao = RecuperaInteiro("");
@@ -77,6 +79,10 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                     case 6:
                         Clear();
                         ProverInformacoes();
+                        ExibirMensagemDeRetornoAoMenu();
+                        break;
+                    case 7:
+                        ComprarPassagem();
                         ExibirMensagemDeRetornoAoMenu();
                         break;
                     case 0:
@@ -326,6 +332,31 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
 
         #endregion
 
+        #region Facade
+        private static void ComprarPassagem() {
+            var passageiro = new Passageiro();
+            var passagem = new Passagem();
+
+            passageiro.Nome = RecuperaStringNaoVazia("Digite o nome do passageiro:");
+            passageiro.CPF = RecuperaStringNaoVazia("Digite o CPF do passageiro:");
+            passageiro.Nascimento = RecuperaDatas("Digite a data de nascimento do passageiro:");
+            passageiro.DocumentacoesAdicionais = new List<DocumentacaoAdicional>();
+            passageiro.Acompanhantes = new List<Passageiro>();
+
+            passagem.DataSaida = RecuperaDatas("Digite a data de saída do voo:");
+            passagem.DataRetorno = RecuperaDatas("Digite a data de retorno do voo:");
+            passagem.BagagemExtra = RecuperaStringNaoVazia("Necessita de bagagens? Digite \"SIM\", senão digite \"NÃO\"").Equals("SIM", StringComparison.InvariantCultureIgnoreCase);
+
+            var request = new CompraDePassagemRequest() { Passageiro = passageiro, Passagem = passagem };
+
+            var facade = new CompraDePassagemFacade();
+
+            facade.ComprarPassagem(request);
+
+        }
+
+        #endregion
+
         #region Métodos de funcionamento do menu
 
         private static void ExibirMensagemDeRetornoAoMenu()
@@ -396,6 +427,20 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
             }
             return informacao;
         }
+
+        private static DateTime RecuperaDatas(string descricao) {
+            DateTime valor;
+
+            try {
+                WriteLine(descricao);
+                valor = DateTime.Parse(ReadLine());
+            } catch (Exception) {
+                WriteLine("Valor inválido!");
+                valor = RecuperaDatas(descricao);
+            }
+            return valor;
+        }
+
         #endregion
     }
 }

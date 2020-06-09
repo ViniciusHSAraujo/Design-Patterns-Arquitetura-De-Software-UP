@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Facade</RootNamespace>
   </PropertyGroup>
 
 </Project>

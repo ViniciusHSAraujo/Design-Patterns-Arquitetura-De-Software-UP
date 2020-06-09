@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Facade\Facade.csproj" />
     <ProjectReference Include="..\Factory_Nome_Sobrenome\Factory_Nome_Sobrenome.csproj" />
     <ProjectReference Include="..\Factory_Provedor_De_Informacoes\Factory_Provedor_De_Informacoes.csproj" />
     <ProjectReference Include="..\Singleton\Singleton.csproj" />
