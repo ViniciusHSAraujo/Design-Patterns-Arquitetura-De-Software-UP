@@ -15,6 +15,7 @@ using Factory_Provedor_De_Informacoes.Entities;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Factory.Factory_Provedor_De_Informacoes.Entities.Enums;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Facade.Entities;
 using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Facade;
+using Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.Composite.Composicoes;
 
 namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincipal
 {
@@ -45,6 +46,7 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 WriteLine("5 - Factory 01 - Listagem de Nomes");
                 WriteLine("6 - Factory 02 - Leitura de Arquivos");
                 WriteLine("7 - Facade - Compra de Passagem");
+                WriteLine("8 - Composite - Compra de Pacotes");
                 WriteLine("0 - Sair");
 
                 int opcao = RecuperaInteiro("");
@@ -82,7 +84,14 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                         ExibirMensagemDeRetornoAoMenu();
                         break;
                     case 7:
+                        Clear();
                         ComprarPassagem();
+                        ExibirMensagemDeRetornoAoMenu();
+                        break;
+                    case 8:
+                        Clear();
+                        ComprarPacoteSimples();
+                        ComprarPacoteComposto();
                         ExibirMensagemDeRetornoAoMenu();
                         break;
                     case 0:
@@ -219,7 +228,7 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
         }
 
         #region Verificação e gravação dos arquivos necessários
-        
+
         private static bool VerificarArquivos()
         {
             try
@@ -233,7 +242,7 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
                 return false;
             }
         }
-        
+
         private static void VerificarEGravarPastaNoDiscoLocalC(string FilePath)
         {
             if (!Directory.Exists(FilePath))
@@ -333,7 +342,8 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
         #endregion
 
         #region Facade
-        private static void ComprarPassagem() {
+        private static void ComprarPassagem()
+        {
             var passageiro = new Passageiro();
             var passagem = new Passagem();
 
@@ -353,6 +363,30 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
 
             facade.ComprarPassagem(request);
 
+        }
+
+        #endregion
+
+        #region Composite
+        private static void ComprarPacoteSimples()
+        {
+            var pacote = new PacoteSimples("Pacote simples;");
+            Console.WriteLine("Quero apenas comprar um pacote simples:");
+            Console.WriteLine($"Pacote comprado: \n{pacote.Operar()}\n");
+        }
+
+        private static void ComprarPacoteComposto()
+        {
+            var pacote01 = new PacoteComposto("Pacote Composto 01");
+            var pacote02 = new PacoteSimples("Pacote Simples 02");
+            var pacote03 = new PacoteComposto("Pacote Composto 03");
+            var pacote04 = new PacoteSimples("Pacote Simples 04");
+            var pacote05 = new PacoteSimples("Pacote Simples 05");
+            pacote01.Adicionar(pacote03);
+            pacote03.Adicionar(pacote02);
+            pacote03.Adicionar(pacote05);
+            pacote01.Adicionar(pacote04);
+            Console.WriteLine($"Pacote comprado: \n{pacote01.Operar()}\n");
         }
 
         #endregion
@@ -428,13 +462,17 @@ namespace Arquitetura_De_Software_Patterns_2020_Vinicius_Araujo.AplicacaoPrincip
             return informacao;
         }
 
-        private static DateTime RecuperaDatas(string descricao) {
+        private static DateTime RecuperaDatas(string descricao)
+        {
             DateTime valor;
 
-            try {
+            try
+            {
                 WriteLine(descricao);
                 valor = DateTime.Parse(ReadLine());
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 WriteLine("Valor inválido!");
                 valor = RecuperaDatas(descricao);
             }
